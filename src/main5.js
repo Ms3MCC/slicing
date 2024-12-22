@@ -75,7 +75,7 @@ let operation = SUBTRACTION;
 let result = evaluator.evaluate(brush1, brush2, operation);
 
 // Create a mesh for the result
-const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+const material = new THREE.MeshStandardMaterial({ color: 0x0088ff, roughness: 0.8, metalness: 0.6 });
 const resultMesh = new THREE.Mesh(result.geometry, material);
 scene.add(resultMesh);
 
@@ -105,28 +105,28 @@ const operationMap = {
   HOLLOW_INTERSECTION: HOLLOW_INTERSECTION,
 };
 
-// Add a dropdown to select CSG operation
-pane
-  .addBinding(params, "operation", {
-    options: {
-      Subtraction: "SUBTRACTION",
-      Addition: "ADDITION",
-      Intersection: "INTERSECTION",
-      "Reverse Subtraction": "REVERSE_SUBTRACTION",
-      Difference: "DIFFERENCE",
-      "Hollow Subtraction": "HOLLOW_SUBTRACTION",
-      "Hollow Intersection": "HOLLOW_INTERSECTION",
-    },
-  })
-  .on("change", (ev) => {
-    console.log("Selected operation:", ev.value);
-    const selectedOperation = ev.value;
+// // Add a dropdown to select CSG operation
+// pane
+//   .addBinding(params, "operation", {
+//     options: {
+//       Subtraction: "SUBTRACTION",
+//       Addition: "ADDITION",
+//       Intersection: "INTERSECTION",
+//       "Reverse Subtraction": "REVERSE_SUBTRACTION",
+//       Difference: "DIFFERENCE",
+//       "Hollow Subtraction": "HOLLOW_SUBTRACTION",
+//       "Hollow Intersection": "HOLLOW_INTERSECTION",
+//     },
+//   })
+//   .on("change", (ev) => {
+//     console.log("Selected operation:", ev.value);
+//     const selectedOperation = ev.value;
 
-     operation = operationMap[selectedOperation];
+//      operation = operationMap[selectedOperation];
 
-    // Update the CSG operation and re-render geometry
-    updateCSG(operation);
-  });
+//     // Update the CSG operation and re-render geometry
+//     updateCSG(operation);
+//   });
 
 // Add dropdowns to select geometries for both brushes
 pane
@@ -166,6 +166,30 @@ pane
     updateCSG(operation); // Recompute the result with updated brush2
   });
 
+
+  // Add a dropdown to select CSG operation
+pane
+.addBinding(params, "operation", {
+  options: {
+    Subtraction: "SUBTRACTION",
+    Addition: "ADDITION",
+    Intersection: "INTERSECTION",
+    "Reverse Subtraction": "REVERSE_SUBTRACTION",
+    Difference: "DIFFERENCE",
+    "Hollow Subtraction": "HOLLOW_SUBTRACTION",
+    "Hollow Intersection": "HOLLOW_INTERSECTION",
+  },
+})
+.on("change", (ev) => {
+  console.log("Selected operation:", ev.value);
+  const selectedOperation = ev.value;
+
+   operation = operationMap[selectedOperation];
+
+  // Update the CSG operation and re-render geometry
+  updateCSG(operation);
+});
+
 // Function to update the CSG operation
 function updateCSG(operation) {
   const newResult = evaluator.evaluate(brush1, brush2, operation);
@@ -177,6 +201,18 @@ function updateCSG(operation) {
 //   brush1.updateMatrixWorld();
 //   brush2.updateMatrixWorld();
 }
+
+pane.addBinding(material, 'roughness', {
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
+
+  pane.addBinding(material, 'metalness', {
+    min: 0,
+    max: 1,
+    step: 0.01,
+  });
 
 // Animation loop
 function animate() {
